@@ -31,6 +31,9 @@ export const TEAMS = [
   { abbr: "WSH", name: "Washington Nationals", mlbId: 120 },
 ];
 
+const ID_TO_ABBR: Record<number, string> = {};
+TEAMS.forEach((t) => { ID_TO_ABBR[t.mlbId] = t.abbr; });
+
 export type TeamGrid = Record<string, boolean[]>;
 
 export function initGrid(): TeamGrid {
@@ -40,7 +43,7 @@ export function initGrid(): TeamGrid {
 }
 
 export function logoUrl(mlbId: number) {
-  return `https://www.mlbstatic.com/team-logos/${mlbId}.svg`;
+  return "https://www.mlbstatic.com/team-logos/" + mlbId + ".svg";
 }
 
 export async function fetchSeasonGrid(): Promise<{ grid: TeamGrid; gameCount: number }> {
@@ -60,7 +63,8 @@ export async function fetchSeasonGrid(): Promise<{ grid: TeamGrid; gameCount: nu
       if (game.status?.abstractGameState !== "Final") continue;
       for (const side of [game.teams?.away, game.teams?.home]) {
         if (!side) continue;
-        const abbr: string = side.team?.abbreviation;
+        const teamId: number = side.team?.id;
+        const abbr = ID_TO_ABBR[teamId];
         const runs = Number(side.score);
         if (abbr && abbr in grid && !isNaN(runs) && runs >= 0 && runs <= 13) {
           grid[abbr][runs] = true;
