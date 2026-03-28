@@ -50,8 +50,6 @@ export async function fetchSeasonGrid(): Promise<{ grid: TeamGrid; gameCount: nu
     `https://statsapi.mlb.com/api/v1/schedule?sportId=1&season=${season}` +
     `&gameType=R&startDate=${season}-03-01&endDate=${today}` +
     `&hydrate=linescore` +
-    `&fields=dates,date,games,status,abstractGameState,teams,away,home,score,team,abbreviation`;
-
   const res = await fetch(url, { next: { revalidate: 0 } });
   if (!res.ok) throw new Error(`MLB API error: ${res.status}`);
   const data = await res.json();
