@@ -1,11 +1,12 @@
-import { kv } from "@vercel/kv";
+import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
 export async function GET() {
   try {
-    const data = await kv.get("tracker");
+    const redis = Redis.fromEnv();
+    const data = await redis.get("tracker");
     if (!data) {
       return NextResponse.json({ ok: false, error: "No data yet. Cron hasn't run." }, { status: 404 });
     }

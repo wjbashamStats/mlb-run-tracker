@@ -1,4 +1,4 @@
-import { kv } from "@vercel/kv";
+import { Redis } from "@upstash/redis";
 import { fetchSeasonGrid } from "../../../lib/mlb";
 import { NextResponse } from "next/server";
 
@@ -16,9 +16,10 @@ export async function GET(req: Request) {
   }
 
   try {
+    const redis = Redis.fromEnv();
     const { grid, gameCount } = await fetchSeasonGrid();
     const updatedAt = new Date().toISOString();
-    await kv.set("tracker", { grid, updatedAt, gameCount });
+    await redis.set("tracker", { grid, updatedAt, gameCount });
     return NextResponse.json({ ok: true, gameCount, updatedAt });
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e);

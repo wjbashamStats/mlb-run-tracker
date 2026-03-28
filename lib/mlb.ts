@@ -44,7 +44,7 @@ export function logoUrl(mlbId: number) {
 }
 
 export async function fetchSeasonGrid(): Promise<{ grid: TeamGrid; gameCount: number }> {
-  const season = 2025;
+  const season = 2026;
   const today = new Date().toISOString().slice(0, 10);
   const url =
     `https://statsapi.mlb.com/api/v1/schedule?sportId=1&season=${season}` +

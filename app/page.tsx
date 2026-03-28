@@ -87,7 +87,7 @@ export default function Home() {
         <div className="title-block">
           <h1>⚾ Run Total Tracker</h1>
           <p className="subtitle">
-            First team to score every total 0–13 across the 2025 season wins the pot
+            First team to score every total 0–13 across the 2026 season wins the pot
           </p>
         </div>
         <div className="controls">
