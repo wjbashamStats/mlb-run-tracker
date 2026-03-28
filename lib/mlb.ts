@@ -34,7 +34,7 @@ export const TEAMS = [
 const ID_TO_ABBR: Record<number, string> = {};
 TEAMS.forEach((t) => { ID_TO_ABBR[t.mlbId] = t.abbr; });
 
-export type TeamGrid = Record<string, boolean[]>;
+export type TeamGrid = Record<string, (string | false)[]>;
 
 export function initGrid(): TeamGrid {
   const g: TeamGrid = {};
@@ -59,6 +59,7 @@ export async function fetchSeasonGrid(): Promise<{ grid: TeamGrid; gameCount: nu
   let gameCount = 0;
 
   for (const d of data.dates ?? []) {
+    const date: string = d.date;
     for (const game of d.games ?? []) {
       if (game.status?.abstractGameState !== "Final") continue;
       for (const side of [game.teams?.away, game.teams?.home]) {
@@ -67,7 +68,9 @@ export async function fetchSeasonGrid(): Promise<{ grid: TeamGrid; gameCount: nu
         const abbr = ID_TO_ABBR[teamId];
         const runs = Number(side.score);
         if (abbr && abbr in grid && !isNaN(runs) && runs >= 0 && runs <= 13) {
-          grid[abbr][runs] = true;
+          if (grid[abbr][runs] === false) {
+            grid[abbr][runs] = date;
+          }
         }
       }
       gameCount++;
